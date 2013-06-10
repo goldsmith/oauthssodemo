@@ -71,20 +71,21 @@ class AcceptTokenHandler(webapp.RequestHandler):
         session['response_with_token'] = 'https://' + os.environ['HTTP_HOST'] + '/oauthcallback#' + self.request.query_string
         
         acct = Account.get_by_key_name(user_id)
-
-        # not happy with this, but not sure what else is available       
-        acct = Account(key_name=user_id, 
-                       name=userinfo['name'] if 'name' in userinfo['name'] else None, 
-                       user_info=json.dumps(userinfo), 
-                       family_name=userinfo['family_name'] if 'family_name' in userinfo else None, 
-                       locale=userinfo['locale'] if 'locale' in userinfo else None,
-                       gender=userinfo['gender'] if 'gender' in userinfo else None,
-                       email=userinfo['email'] if 'email' in userinfo else None,
-                       given_name=userinfo['given_name'] if 'given_name' in userinfo else None,
-                       google_account_id=userinfo['id'] if 'id' in userinfo else None,
-                       verified_email=userinfo['verified_email'] if 'verified_email' in userinfo else None,
-                       link=userinfo['link'] if 'link' in userinfo else None,
-                       picture=userinfo['picture'] if 'picture' in userinfo else None)
+      
+        acct = Account(
+                        key_name=user_id, 
+                        name=userinfo.get('name'),
+                        user_info=json.dumps(userinfo), 
+                        family_name=userinfo.get('family_name'),
+                        locale=userinfo.get('locale')
+                        gender=userinfo.get('gender'),
+                        email=userinfo.get('email'),
+                        given_name=userinfo.get('given_name'),
+                        google_account_id=userinfo.get('id'),
+                        verified_email=userinfo.get('verified_email'),
+                        link=userinfo.get('link'),
+                        picture=userinfo.get('picture')
+                      )
                           
         acct.access_token = a_t
         acct.put()      
